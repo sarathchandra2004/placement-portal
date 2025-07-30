@@ -1,0 +1,19 @@
+# Root .gitignore
+
+# Node modules in both client and server
+client/node_modules/
+server/node_modules/
+
+# Environment files
+client/.env
+server/.env
+
+# Logs
+*.log
+
+# Vite build
+client/dist/
+
+# OS
+.DS_Store
+Thumbs.db
