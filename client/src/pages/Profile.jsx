@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 import { FiUser, FiMail, FiBookOpen, FiCalendar, FiEdit } from 'react-icons/fi'
 import toast from 'react-hot-toast'
+import './Profile.css'  // Import the CSS I provided
 
 const Profile = () => {
   const { user } = useAuth()
@@ -19,7 +20,6 @@ const Profile = () => {
     try {
       setLoading(true)
       const response = await api.get('/experiences')
-      // Filter experiences for current user (this would be better handled on backend)
       const userExp = response.data.filter(exp => exp.userId === user.id)
       setUserExperiences(userExp)
     } catch (error) {
@@ -51,7 +51,7 @@ const Profile = () => {
   return (
     <div>
       {/* Page Header */}
-      <div className="page-header">
+      <div className="page-header fade-in">
         <div className="container">
           <h1>My Profile</h1>
           <p>Manage your account and view your shared experiences</p>
@@ -60,8 +60,9 @@ const Profile = () => {
 
       <div className="container">
         <div className="max-w-4xl mx-auto">
+          
           {/* Profile Header */}
-          <div className="profile-header">
+          <div className="profile-header fade-in">
             <div className="profile-avatar">
               {user.name?.charAt(0)?.toUpperCase() || 'U'}
             </div>
@@ -95,7 +96,7 @@ const Profile = () => {
           </div>
 
           {/* User's Experiences */}
-          <div className="card">
+          <div className="card fade-in">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold">My Shared Experiences</h3>
@@ -124,7 +125,7 @@ const Profile = () => {
               ) : (
                 <div className="space-y-4">
                   {userExperiences.map((experience) => (
-                    <div key={experience._id} className="experience-card">
+                    <div key={experience._id} className="experience-card fade-in">
                       <div className="experience-header">
                         <div>
                           <h4 className="experience-company">{experience.company}</h4>
@@ -136,12 +137,8 @@ const Profile = () => {
                       </div>
 
                       <div className="experience-meta">
-                        <span className="badge badge-primary">
-                          {experience.type}
-                        </span>
-                        <span className="badge badge-secondary">
-                          {experience.department}
-                        </span>
+                        <span className="badge badge-primary">{experience.type}</span>
+                        <span className="badge badge-secondary">{experience.department}</span>
                         {experience.cgpa && (
                           <span className="badge badge-warning">
                             CGPA: {experience.cgpa}
@@ -182,7 +179,7 @@ const Profile = () => {
           </div>
 
           {/* Account Information */}
-          <div className="card mt-6">
+          <div className="card mt-6 fade-in">
             <div className="p-6">
               <h3 className="text-xl font-semibold mb-4">Account Information</h3>
               
@@ -239,10 +236,11 @@ const Profile = () => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
   )
 }
 
-export default Profile 
+export default Profile

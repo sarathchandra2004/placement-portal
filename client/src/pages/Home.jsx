@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { FiBookOpen, FiMessageSquare, FiTrendingUp, FiUsers } from 'react-icons/fi'
+import './Home.css'
 
 const Home = () => {
   return (

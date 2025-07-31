@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../utils/api'
 import { FiPlus, FiX } from 'react-icons/fi'
 import toast from 'react-hot-toast'
+import './AddExperience.css'
 
 const AddExperience = () => {
   const [formData, setFormData] = useState({
@@ -75,7 +76,6 @@ const AddExperience = () => {
     setLoading(true)
 
     try {
-      // Clean up empty array items
       const cleanedData = {
         ...formData,
         questions: formData.questions.filter(q => q.trim() !== ''),
@@ -99,8 +99,7 @@ const AddExperience = () => {
   }
 
   return (
-    <div>
-      {/* Page Header */}
+    <div className="add-experience">
       <div className="page-header">
         <div className="container">
           <h1>Share Your Experience</h1>
@@ -109,311 +108,116 @@ const AddExperience = () => {
       </div>
 
       <div className="container">
-        <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="card">
-            <div className="p-6">
-              <h2 className="text-xl font-semibold mb-6">Experience Details</h2>
+        <div className="form-wrapper">
+          <form onSubmit={handleSubmit} className="form-card">
+            <h2 className="form-title">Experience Details</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Basic Information */}
-                <div className="form-group">
-                  <label className="form-label">Your Name</label>
-                  <input
-                    type="text"
-                    name="studentName"
-                    value={formData.studentName}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="Enter your name"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Company</label>
-                  <input
-                    type="text"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="Enter company name"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Role/Position</label>
-                  <input
-                    type="text"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="e.g., Software Engineer, Data Analyst"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Package (LPA)</label>
-                  <input
-                    type="number"
-                    name="package"
-                    value={formData.package}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="Enter package in LPA"
-                    step="0.1"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Type</label>
-                  <select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    className="form-input"
-                    required
-                  >
-                    <option value="">Select type</option>
-                    {types.map(type => (
-                      <option key={type} value={type}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Department</label>
-                  <select
-                    name="department"
-                    value={formData.department}
-                    onChange={handleChange}
-                    className="form-input"
-                    required
-                  >
-                    <option value="">Select department</option>
-                    {departments.map(dept => (
-                      <option key={dept} value={dept}>{dept}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">CGPA</label>
-                  <input
-                    type="number"
-                    name="cgpa"
-                    value={formData.cgpa}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="Enter your CGPA"
-                    step="0.01"
-                    min="0"
-                    max="10"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Number of Rounds</label>
-                  <input
-                    type="number"
-                    name="rounds"
-                    value={formData.rounds}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="Number of interview rounds"
-                    min="1"
-                    required
-                  />
-                </div>
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Your Name</label>
+                <input type="text" name="studentName" value={formData.studentName} onChange={handleChange} required />
               </div>
 
-              {/* Checkboxes */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="cgpaMatters"
-                    checked={formData.cgpaMatters}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
-                  <label>CGPA mattered in selection</label>
-                </div>
-
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="wouldRecommend"
-                    checked={formData.wouldRecommend}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
-                  <label>Would recommend this company</label>
-                </div>
+              <div className="form-group">
+                <label>Company</label>
+                <input type="text" name="company" value={formData.company} onChange={handleChange} required />
               </div>
 
-              {/* Difficulty Rating */}
-              <div className="form-group mt-6">
-                <label className="form-label">Interview Difficulty (1-5)</label>
-                <select
-                  name="difficultyRating"
-                  value={formData.difficultyRating}
-                  onChange={handleChange}
-                  className="form-input"
-                >
-                  <option value="1">1 - Very Easy</option>
-                  <option value="2">2 - Easy</option>
-                  <option value="3">3 - Moderate</option>
-                  <option value="4">4 - Difficult</option>
-                  <option value="5">5 - Very Difficult</option>
+              <div className="form-group">
+                <label>Role/Position</label>
+                <input type="text" name="role" value={formData.role} onChange={handleChange} required />
+              </div>
+
+              <div className="form-group">
+                <label>Package (LPA)</label>
+                <input type="number" name="package" value={formData.package} onChange={handleChange} step="0.1" required />
+              </div>
+
+              <div className="form-group">
+                <label>Type</label>
+                <select name="type" value={formData.type} onChange={handleChange} required>
+                  <option value="">Select type</option>
+                  {types.map(type => <option key={type} value={type}>{type}</option>)}
                 </select>
               </div>
 
-              {/* Timeline */}
               <div className="form-group">
-                <label className="form-label">Interview Timeline</label>
-                <textarea
-                  name="timeline"
-                  value={formData.timeline}
-                  onChange={handleChange}
-                  className="form-input form-textarea"
-                  placeholder="Describe the interview timeline and process"
-                  rows="3"
-                />
+                <label>Department</label>
+                <select name="department" value={formData.department} onChange={handleChange} required>
+                  <option value="">Select department</option>
+                  {departments.map(dept => <option key={dept} value={dept}>{dept}</option>)}
+                </select>
               </div>
 
-              {/* Preparation Duration */}
               <div className="form-group">
-                <label className="form-label">Preparation Duration</label>
-                <input
-                  type="text"
-                  name="preparationDuration"
-                  value={formData.preparationDuration}
-                  onChange={handleChange}
-                  className="form-input"
-                  placeholder="e.g., 2 months, 6 weeks"
-                />
+                <label>CGPA</label>
+                <input type="number" name="cgpa" value={formData.cgpa} onChange={handleChange} step="0.01" min="0" max="10" />
               </div>
 
-              {/* Interview Questions */}
               <div className="form-group">
-                <label className="form-label">Interview Questions</label>
-                {formData.questions.map((question, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
+                <label>Number of Rounds</label>
+                <input type="number" name="rounds" value={formData.rounds} onChange={handleChange} min="1" required />
+              </div>
+            </div>
+
+            <div className="checkbox-group">
+              <label><input type="checkbox" name="cgpaMatters" checked={formData.cgpaMatters} onChange={handleChange} /> CGPA mattered in selection</label>
+              <label><input type="checkbox" name="wouldRecommend" checked={formData.wouldRecommend} onChange={handleChange} /> Would recommend this company</label>
+            </div>
+
+            <div className="form-group">
+              <label>Interview Difficulty for preparation (1-5)</label>
+              <select
+                name="difficultyRating"
+                value={formData.difficultyRating}
+                onChange={handleChange}
+              >
+                <option value="1">1 - Very Easy: Arre bas naam likha aur ho gaya </option>
+                <option value="2">2 - Easy: Thoda padha, zyada phone chalaya</option>
+                <option value="3">3 - Moderate: Engineering semester exam vibes (One night wonders)</option>
+                <option value="4">4 - Difficult: RCB ka IPL jeetna jitna mushkil (Luck is important)</option>
+                <option value="5">5 - Very Difficult: "Yeh humse na ho payega", bhagwaan bharose </option>
+              </select>
+            </div>
+            {['questions', 'questionTags', 'resources'].map((field) => (
+              <div key={field} className="form-group">
+                <label>{field === 'questions' ? 'Interview Questions' : field === 'questionTags' ? 'Question Tags (Ex: Trees, System Design, OS.. etc)' : 'Preparation Resources'}</label>
+                {formData[field].map((item, index) => (
+                  <div key={index} className="dynamic-input">
                     <input
                       type="text"
-                      value={question}
-                      onChange={(e) => handleArrayChange(index, 'questions', e.target.value)}
-                      className="form-input flex-1"
-                      placeholder="Enter interview question"
+                      value={item}
+                      onChange={(e) => handleArrayChange(index, field, e.target.value)}
+                      placeholder={`Enter ${field.slice(0, -1)}`}
                     />
-                    {formData.questions.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeArrayItem('questions', index)}
-                        className="btn btn-danger"
-                      >
+                    {formData[field].length > 1 && (
+                      <button type="button" onClick={() => removeArrayItem(field, index)} className="btn-danger">
                         <FiX />
                       </button>
                     )}
                   </div>
                 ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem('questions')}
-                  className="btn btn-secondary"
-                >
-                  <FiPlus /> Add Question
+                <button type="button" onClick={() => addArrayItem(field)} className="btn-secondary">
+                  <FiPlus /> Add {field.slice(0, -1)}
                 </button>
               </div>
+            ))}
 
-              {/* Question Tags */}
-              <div className="form-group">
-                <label className="form-label">Question Tags</label>
-                {formData.questionTags.map((tag, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={tag}
-                      onChange={(e) => handleArrayChange(index, 'questionTags', e.target.value)}
-                      className="form-input flex-1"
-                      placeholder="e.g., DSA, System Design, Behavioral"
-                    />
-                    {formData.questionTags.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeArrayItem('questionTags', index)}
-                        className="btn btn-danger"
-                      >
-                        <FiX />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem('questionTags')}
-                  className="btn btn-secondary"
-                >
-                  <FiPlus /> Add Tag
-                </button>
-              </div>
+            <div className="form-group">
+              <label>Interview Guidance/ Additional Tips</label>
+              <textarea name="timeline" value={formData.timeline} onChange={handleChange} rows="3" />
+            </div>
 
-              {/* Resources */}
-              <div className="form-group">
-                <label className="form-label">Preparation Resources</label>
-                {formData.resources.map((resource, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={resource}
-                      onChange={(e) => handleArrayChange(index, 'resources', e.target.value)}
-                      className="form-input flex-1"
-                      placeholder="e.g., LeetCode, GeeksforGeeks, Book name"
-                    />
-                    {formData.resources.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeArrayItem('resources', index)}
-                        className="btn btn-danger"
-                      >
-                        <FiX />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addArrayItem('resources')}
-                  className="btn btn-secondary"
-                >
-                  <FiPlus /> Add Resource
-                </button>
-              </div>
+            <div className="form-group">
+              <label>Preparation Strategy</label>
+              <input type="text" name="preparationDuration" value={formData.preparationDuration} onChange={handleChange} />
+            </div>
 
-              {/* Submit Button */}
-              <div className="flex justify-end gap-4 mt-8">
-                <button
-                  type="button"
-                  onClick={() => navigate('/experiences')}
-                  className="btn btn-secondary"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn btn-primary"
-                >
-                  {loading ? 'Sharing...' : 'Share Experience'}
-                </button>
-              </div>
+            {/* Repeated input arrays */}
+
+            <div className="form-actions">
+              <button type="button" onClick={() => navigate('/experiences')} className="btn-secondary">Cancel</button>
+              <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Sharing...' : 'Share Experience'}</button>
             </div>
           </form>
         </div>
@@ -422,4 +226,4 @@ const AddExperience = () => {
   )
 }
 
-export default AddExperience 
+export default AddExperience
