@@ -7,7 +7,7 @@ export const getAllExperiences = async (req, res) => {
     const { company, department, type, minLPA, maxLPA } = req.query;
     let filter = {};
 
-    if (company) filter.company = company;
+    if (company) filter.company = { $regex: company, $options: 'i' };
     if (department) filter.department = department;
     if (type) filter.type = type;
     if (minLPA || maxLPA) {
