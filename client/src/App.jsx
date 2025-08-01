@@ -10,6 +10,7 @@ import ExperienceDetails from './pages/ExperienceDetails'
 import Discussions from './pages/Discussions'
 import Profile from './pages/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
+import EditExperience from './pages/EditExperience';
 
 import './styles/App.css'
 
@@ -44,6 +45,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+        <Route path="/edit-experience/:id" element={<EditExperience />} />
         </Routes>
 
       </main>

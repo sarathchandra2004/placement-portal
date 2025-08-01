@@ -18,6 +18,7 @@ const experienceSchema = new mongoose.Schema({
   timeline: String,
   difficultyRating: Number,
   wouldRecommend: Boolean,
+  gotSelected: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 

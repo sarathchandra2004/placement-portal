@@ -78,7 +78,13 @@ const ExperienceDetails = () => {
               {experience.package ? `₹ ${experience.package} LPA` : 'N/A'}
             </span>
             <span className="badge">{experience.type || 'N/A'}</span>
+            {experience.gotSelected ? (
+              <span className="selected-badge success">Selected</span>
+            ) : (
+              <span className="selected-badge danger">Not Selected</span>
+            )}
           </div>
+
         </section>
 
         <section className="info-grid">

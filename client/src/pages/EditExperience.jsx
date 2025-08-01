@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { api } from '../utils/api'
-import { FiPlus, FiX } from 'react-icons/fi'
-import toast from 'react-hot-toast'
-import './AddExperience.css'
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { FiPlus, FiX } from 'react-icons/fi';
+import { api } from '../utils/api';
+import './AddExperience.css';
 
-const AddExperience = () => {
+const EditExperience = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     studentName: '',
     company: '',
@@ -24,58 +26,66 @@ const AddExperience = () => {
     difficultyRating: 3,
     wouldRecommend: true,
     gotSelected: false
-  })
-  const [loading, setLoading] = useState(false)
+  });
+  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate()
+  useEffect(() => {
+    const fetchExperience = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await api.get(`/experiences/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = res.data;
 
-  const departments = [
-    'Computer Science',
-    'Information Technology',
-    'Electronics & Communication',
-    'Mechanical Engineering',
-    'Civil Engineering',
-    'Electrical Engineering',
-    'Chemical Engineering',
-    'Biotechnology',
-    'Other'
-  ]
+        // Normalize empty arrays
+        setFormData({
+          ...data,
+          questions: data.questions?.length ? data.questions : [''],
+          questionTags: data.questionTags?.length ? data.questionTags : [''],
+          resources: data.resources?.length ? data.resources : ['']
+        });
+      } catch (err) {
+        console.error('Failed to fetch experience:', err);
+        toast.error('Error loading experience');
+      }
+    };
 
-  const types = ['internship', 'placement']
+    fetchExperience();
+  }, [id]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
-    }))
-  }
+    }));
+  };
 
   const handleArrayChange = (index, field, value) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
-    }))
-  }
+      [field]: prev[field].map((item, i) => (i === index ? value : item))
+    }));
+  };
 
   const addArrayItem = (field) => {
     setFormData(prev => ({
       ...prev,
       [field]: [...prev[field], '']
-    }))
-  }
+    }));
+  };
 
   const removeArrayItem = (field, index) => {
     setFormData(prev => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index)
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
+    e.preventDefault();
+    setLoading(true);
     try {
       const cleanedData = {
         ...formData,
@@ -86,25 +96,25 @@ const AddExperience = () => {
         cgpa: parseFloat(formData.cgpa),
         rounds: parseInt(formData.rounds),
         difficultyRating: parseInt(formData.difficultyRating)
-      }
+      };
 
-      await api.post('/experiences', cleanedData)
-      toast.success('Experience shared successfully!')
-      navigate('/experiences')
-    } catch (error) {
-      console.error('Error creating experience:', error)
-      toast.error('Failed to share experience')
+      await api.put(`/experiences/${id}`, cleanedData);
+      toast.success('Experience updated successfully!');
+      navigate('/profile');
+    } catch (err) {
+      console.error('Update failed:', err);
+      toast.error('Update failed');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="add-experience">
       <div className="page-header">
         <div className="container">
-          <h1>Share Your Experience</h1>
-          <p>Help other students by sharing your placement or internship experience</p>
+          <h1>Edit Your Experience</h1>
+          <p>Update your placement or internship details to keep it fresh and helpful.</p>
         </div>
       </div>
 
@@ -113,51 +123,43 @@ const AddExperience = () => {
           <form onSubmit={handleSubmit} className="form-card">
             <h2 className="form-title">Experience Details</h2>
 
+            {/* Form fields same as AddExperience */}
             <div className="form-grid">
               <div className="form-group">
                 <label>Your Name</label>
-                <input type="text" name="studentName" value={formData.studentName} onChange={handleChange} required />
+                <input type="text" name="studentName" value={formData.studentName} onChange={handleChange} />
               </div>
-
               <div className="form-group">
                 <label>Company</label>
                 <input type="text" name="company" value={formData.company} onChange={handleChange} required />
               </div>
-
               <div className="form-group">
                 <label>Role/Position</label>
                 <input type="text" name="role" value={formData.role} onChange={handleChange} required />
               </div>
-
               <div className="form-group">
                 <label>Package (LPA)</label>
-                <input type="number" name="package" value={formData.package} onChange={handleChange} step="0.1" required />
+                <input type="number" name="package" value={formData.package} onChange={handleChange} step="0.1" />
               </div>
-
               <div className="form-group">
                 <label>Type</label>
                 <select name="type" value={formData.type} onChange={handleChange} required>
                   <option value="">Select type</option>
-                  {types.map(type => <option key={type} value={type}>{type}</option>)}
+                  <option value="internship">Internship</option>
+                  <option value="placement">Placement</option>
                 </select>
               </div>
-
               <div className="form-group">
                 <label>Department</label>
-                <select name="department" value={formData.department} onChange={handleChange} required>
-                  <option value="">Select department</option>
-                  {departments.map(dept => <option key={dept} value={dept}>{dept}</option>)}
-                </select>
+                <input type="text" name="department" value={formData.department} onChange={handleChange} />
               </div>
-
               <div className="form-group">
                 <label>CGPA</label>
-                <input type="number" name="cgpa" value={formData.cgpa} onChange={handleChange} step="0.01" min="0" max="10" />
+                <input type="number" name="cgpa" value={formData.cgpa} onChange={handleChange} step="0.01" />
               </div>
-
               <div className="form-group">
                 <label>Number of Rounds</label>
-                <input type="number" name="rounds" value={formData.rounds} onChange={handleChange} min="1" required />
+                <input type="number" name="rounds" value={formData.rounds} onChange={handleChange} />
               </div>
             </div>
 
@@ -167,22 +169,19 @@ const AddExperience = () => {
             </div>
 
             <div className="form-group">
-              <label>Interview Difficulty for preparation (1-5)</label>
-              <select
-                name="difficultyRating"
-                value={formData.difficultyRating}
-                onChange={handleChange}
-              >
-                <option value="1">1 - Very Easy: Arre bas naam likha aur ho gaya </option>
-                <option value="2">2 - Easy: Thoda padha, zyada phone chalaya</option>
-                <option value="3">3 - Moderate: Engineering semester exam vibes (One night wonders)</option>
-                <option value="4">4 - Difficult: RCB ka IPL jeetna jitna mushkil (Luck is important)</option>
-                <option value="5">5 - Very Difficult: "Yeh humse na ho payega", bhagwaan bharose </option>
+              <label>Interview Difficulty (1-5)</label>
+              <select name="difficultyRating" value={formData.difficultyRating} onChange={handleChange}>
+                <option value="1">1 - Very Easy</option>
+                <option value="2">2 - Easy</option>
+                <option value="3">3 - Moderate</option>
+                <option value="4">4 - Difficult</option>
+                <option value="5">5 - Very Difficult</option>
               </select>
             </div>
+
             {['questions', 'questionTags', 'resources'].map((field) => (
               <div key={field} className="form-group">
-                <label>{field === 'questions' ? 'Interview Questions' : field === 'questionTags' ? 'Question Tags (Ex: Trees, System Design, OS.. etc)' : 'Preparation Resources'}</label>
+                <label>{field === 'questions' ? 'Interview Questions' : field === 'questionTags' ? 'Question Tags' : 'Preparation Resources'}</label>
                 {formData[field].map((item, index) => (
                   <div key={index} className="dynamic-input">
                     <input
@@ -205,8 +204,8 @@ const AddExperience = () => {
             ))}
 
             <div className="form-group">
-              <label>Interview Guidance/ Additional Tips</label>
-              <textarea name="timeline" value={formData.timeline} onChange={handleChange} rows="3" />
+              <label>Additional Timeline / Tips</label>
+              <textarea name="timeline" value={formData.timeline} onChange={handleChange} />
             </div>
 
             <div className="form-group">
@@ -214,31 +213,29 @@ const AddExperience = () => {
               <input type="text" name="preparationDuration" value={formData.preparationDuration} onChange={handleChange} />
             </div>
 
-            {/* Repeated input arrays */}
-
             <div className="form-actions">
-              <button type="button" onClick={() => navigate('/experiences')} className="btn-secondary">Cancel</button>
-              <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Sharing...' : 'Share Experience'}</button>
-
+              <button type="button" onClick={() => navigate('/profile')} className="btn-secondary">Cancel</button>
+              <button type="submit" disabled={loading} className="btn-primary">
+                {loading ? 'Updating...' : 'Update Experience'}
+              </button>
             </div>
+
             <div className="highlight-box">
-  <label className="highlight-label">
-    <input
-      type="checkbox"
-      name="gotSelected"
-      checked={formData.gotSelected}
-      onChange={handleChange}
-    />
-    <span className="highlight-text">I got selected in this company</span>
-  </label>
-</div>
-
-
+              <label className="highlight-label">
+                <input
+                  type="checkbox"
+                  name="gotSelected"
+                  checked={formData.gotSelected}
+                  onChange={handleChange}
+                />
+                <span className="highlight-text">I got selected in this company</span>
+              </label>
+            </div>
           </form>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddExperience
+export default EditExperience;

@@ -13,7 +13,8 @@ const Experiences = () => {
     department: '',
     type: '',
     minLPA: '',
-    maxLPA: ''
+    maxLPA: '',
+    gotSelected: ''
   })
   const resultsRef = useRef(null)
 
@@ -47,6 +48,10 @@ const Experiences = () => {
       if (resultsRef.current) {
         resultsRef.current.scrollIntoView({ behavior: 'smooth' })
       }
+      if (value !== '') {
+        params.append(key, value === 'true' ? true : value === 'false' ? false : value)
+      }
+
     } catch (error) {
       console.error('Error fetching experiences:', error)
       toast.error('Failed to load experiences')
@@ -136,7 +141,7 @@ const Experiences = () => {
             <div>
               <label>Min Package (LPA)</label>
               <div className="input-icon">
-               
+
                 <input
                   type="number"
                   name="minLPA"
@@ -150,7 +155,7 @@ const Experiences = () => {
             <div>
               <label>Max Package (LPA)</label>
               <div className="input-icon">
-                
+
                 <input
                   type="number"
                   name="maxLPA"
@@ -160,6 +165,15 @@ const Experiences = () => {
                 />
               </div>
             </div>
+            <div>
+              <label>Selection Status</label>
+              <select name="gotSelected" value={pendingFilters.gotSelected} onChange={handlePendingFilterChange}>
+                <option value="">All</option>
+                <option value="true">Selected</option>
+                <option value="false">Not Selected</option>
+              </select>
+            </div>
+
           </div>
 
           <div className="filters-actions">
@@ -191,12 +205,18 @@ const Experiences = () => {
                       <p>{experience.role || 'Role Not Available'}</p>
                       {experience.studentName && <span>by {experience.studentName}</span>}
                     </div>
-                    <span className="package-badge">
-                      {experience.package ? `${experience.package} LPA` : 'N/A'}
-                    </span>
+                    <div className="card-tags">
+                      <span className="package-badge">
+                        {experience.package ? `${experience.package} LPA` : 'N/A'}
+                      </span>
+                      <span className={`selected-badge ${experience.gotSelected ? 'success' : 'danger'}`}>
+                        {experience.gotSelected ? 'Selected' : 'Not Selected'}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Link>
+
             ))}
           </div>
         )}
