@@ -10,11 +10,9 @@ import ExperienceDetails from './pages/ExperienceDetails'
 import Discussions from './pages/Discussions'
 import Profile from './pages/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
-import EditExperience from './pages/EditExperience';
-
-import './styles/App.css'
+import EditExperience from './pages/EditExperience'
 import UserProfile from './pages/UserProfile'
-
+import './styles/App.css'
 
 function App() {
   const { user } = useAuth()
@@ -49,7 +47,6 @@ function App() {
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route path="/edit-experience/:id" element={<EditExperience />} />
         </Routes>
-
       </main>
       <div
         style={{
@@ -92,9 +89,8 @@ function App() {
           </a>
         </p>
       </div>
-
     </div>
   )
 }
 
-export default App 
+export default App
