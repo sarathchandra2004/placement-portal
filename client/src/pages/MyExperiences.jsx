@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { FiEdit, FiCalendar, FiBookOpen } from 'react-icons/fi';
 import './MyExperiences.css';
 
-
+// Add your deployed backend URL here
+const API_BASE_URL = process.env.VITE_API_BASE_URL || 'https://placement-portal-server.onrender.com/api' ;
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -24,7 +25,8 @@ const MyExperiences = () => {
     const fetchMyExperiences = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('/api/experiences/mine', {
+        // Use full URL instead of relative path
+        const res = await axios.get(`${API_BASE_URL}/api/experiences/mine`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -32,6 +34,15 @@ const MyExperiences = () => {
         setUserExperiences(res.data);
       } catch (err) {
         console.error('Error fetching user experiences:', err);
+        // Add more detailed error logging
+        if (err.response) {
+          console.error('Response error:', err.response.data);
+          console.error('Status:', err.response.status);
+        } else if (err.request) {
+          console.error('Request error:', err.request);
+        } else {
+          console.error('Error message:', err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -96,7 +107,8 @@ const MyExperiences = () => {
 
                         try {
                           const token = localStorage.getItem('token');
-                          await axios.delete(`/api/experiences/${experience._id}`, {
+                          // Use full URL for delete request too
+                          await axios.delete(`${API_BASE_URL}/api/experiences/${experience._id}`, {
                             headers: {
                               Authorization: `Bearer ${token}`,
                             },
@@ -154,8 +166,6 @@ const MyExperiences = () => {
                 )}
               </div>
             ))}
-
-
           </div>
         )}
       </div>
