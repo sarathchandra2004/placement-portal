@@ -2,21 +2,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import authRoutes from './routes/authRoutes.js';
-import experienceRoutes from './routes/experienceRoutes.js';
-import discussionRoutes from './routes/discussionRoutes.js';
-import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 const app = express();
 
-// Updated CORS configuration for production
 const corsOptions = {
   origin: [
-    'http://localhost:3000', // For local development
-    'http://localhost:5173', // For Vite dev server
-    'https://placement-portal-client.onrender.com',
-    'https://placement-portal-server.onrender.com/api', 
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://placement-portal-client.onrender.com', // Replace with actual URL
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -26,42 +20,50 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Add a simple health check endpoint
+// Health check
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Server is running!', 
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    timestamp: new Date().toISOString() 
   });
 });
 
-// API Routes
-app.use('/api/users', userRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/experiences', experienceRoutes);
-app.use('/api/discussions', discussionRoutes);
+// Import routes one by one to identify the problematic one
+console.log('Loading auth routes...');
+try {
+  const { default: authRoutes } = await import('./routes/authRoutes.js');
+  app.use('/api/auth', authRoutes);
+  console.log('✅ Auth routes loaded successfully');
+} catch (error) {
+  console.error('❌ Error loading auth routes:', error.message);
+}
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('Error:', err.stack);
-  res.status(500).json({ 
-    message: 'Something went wrong!', 
-    error: process.env.NODE_ENV === 'production' ? {} : err.stack 
-  });
-});
+console.log('Loading user routes...');
+try {
+  const { default: userRoutes } = await import('./routes/userRoutes.js');
+  app.use('/api/users', userRoutes);
+  console.log('✅ User routes loaded successfully');
+} catch (error) {
+  console.error('❌ Error loading user routes:', error.message);
+}
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ 
-    message: `Route ${req.originalUrl} not found`,
-    availableRoutes: [
-      '/api/auth',
-      '/api/users', 
-      '/api/experiences',
-      '/api/discussions'
-    ]
-  });
-});
+console.log('Loading experience routes...');
+try {
+  const { default: experienceRoutes } = await import('./routes/experienceRoutes.js');
+  app.use('/api/experiences', experienceRoutes);
+  console.log('✅ Experience routes loaded successfully');
+} catch (error) {
+  console.error('❌ Error loading experience routes:', error.message);
+}
+
+console.log('Loading discussion routes...');
+try {
+  const { default: discussionRoutes } = await import('./routes/discussionRoutes.js');
+  app.use('/api/discussions', discussionRoutes);
+  console.log('✅ Discussion routes loaded successfully');
+} catch (error) {
+  console.error('❌ Error loading discussion routes:', error.message);
+}
 
 const PORT = process.env.PORT || 5000;
 
@@ -73,7 +75,6 @@ mongoose.connect(process.env.MONGO_URI, {
   console.log("✅ MongoDB connected successfully");
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📡 Server URL: ${process.env.NODE_ENV === 'production' ? 'https://your-backend-app.onrender.com' : `http://localhost:${PORT}`}`);
   });
 })
 .catch(err => console.error("❌ MongoDB connection error:", err));
