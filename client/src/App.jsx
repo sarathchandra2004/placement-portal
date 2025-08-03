@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import EditExperience from './pages/EditExperience';
 
 import './styles/App.css'
+import UserProfile from './pages/UserProfile'
 
 
 function App() {
@@ -45,7 +46,8 @@ function App() {
               </ProtectedRoute>
             }
           />
-        <Route path="/edit-experience/:id" element={<EditExperience />} />
+          <Route path="/profile/:id" element={<UserProfile />} />
+          <Route path="/edit-experience/:id" element={<EditExperience />} />
         </Routes>
 
       </main>
@@ -70,20 +72,24 @@ function App() {
           }}
         >
           Made with <span style={{ color: "red", fontSize: "1.2rem" }}>❤️</span> by{" "}
-          <span
+          <a
+            href="https://www.linkedin.com/in/yerraguntla-sarath-chandra-037835259/"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               fontWeight: "700",
               background: "linear-gradient(90deg, #6c63ff, #42a5f5)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               cursor: "pointer",
-              transition: "all 0.3s ease"
+              transition: "all 0.3s ease",
+              textDecoration: "none"
             }}
             onMouseEnter={(e) => (e.target.style.opacity = "0.8")}
             onMouseLeave={(e) => (e.target.style.opacity = "1")}
           >
             Sarath Chandra
-          </span>
+          </a>
         </p>
       </div>
 

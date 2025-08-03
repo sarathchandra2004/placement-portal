@@ -1,13 +1,15 @@
-import Experience from '../models/Experience.js';
+import Experience from "../models/Experience.js";
 
 // @desc    Get all experiences (with optional filters)
 // @route   GET /api/experiences
 export const getAllExperiences = async (req, res) => {
   try {
-    const { company, department, type, minLPA, maxLPA } = req.query;
+    const { company, department, type, minLPA, maxLPA, gotSelected } =
+      req.query;
+
     let filter = {};
 
-    if (company) filter.company = { $regex: company, $options: 'i' };
+    if (company) filter.company = { $regex: company, $options: "i" };
     if (department) filter.department = department;
     if (type) filter.type = type;
     if (minLPA || maxLPA) {
@@ -16,11 +18,18 @@ export const getAllExperiences = async (req, res) => {
       if (maxLPA) filter.package.$lte = parseFloat(maxLPA);
     }
 
+    // ✅ handle gotSelected explicitly
+    if (gotSelected === "true") {
+      filter.gotSelected = true;
+    } else if (gotSelected === "false") {
+      filter.gotSelected = false;
+    }
+
     const experiences = await Experience.find(filter).sort({ createdAt: -1 });
     res.status(200).json(experiences);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: "Server error" });
   }
 };
 
@@ -29,11 +38,11 @@ export const getAllExperiences = async (req, res) => {
 export const getExperienceById = async (req, res) => {
   try {
     const exp = await Experience.findById(req.params.id);
-    if (!exp) return res.status(404).json({ msg: 'Experience not found' });
+    if (!exp) return res.status(404).json({ msg: "Experience not found" });
     res.status(200).json(exp);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: "Server error" });
   }
 };
 
@@ -51,7 +60,7 @@ export const createExperience = async (req, res) => {
     res.status(201).json(saved);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Failed to create experience' });
+    res.status(500).json({ msg: "Failed to create experience" });
   }
 };
 
@@ -61,12 +70,14 @@ export const updateExperience = async (req, res) => {
   try {
     const experience = await Experience.findById(req.params.id);
     if (!experience) {
-      return res.status(404).json({ msg: 'Experience not found' });
+      return res.status(404).json({ msg: "Experience not found" });
     }
 
     // ✅ Check ownership
     if (experience.userId.toString() !== req.userId) {
-      return res.status(403).json({ msg: 'Not authorized to update this experience' });
+      return res
+        .status(403)
+        .json({ msg: "Not authorized to update this experience" });
     }
 
     const updated = await Experience.findByIdAndUpdate(
@@ -78,24 +89,24 @@ export const updateExperience = async (req, res) => {
     res.status(200).json(updated);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Failed to update experience' });
+    res.status(500).json({ msg: "Failed to update experience" });
   }
 };
-
 
 // @desc    Get experiences shared by current user
 // @route   GET /api/experiences/mine
 // @access  Private (auth middleware must populate req.userId)
 export const getMyExperiences = async (req, res) => {
   try {
-    const experiences = await Experience.find({ userId: req.userId }).sort({ createdAt: -1 });
+    const experiences = await Experience.find({ userId: req.userId }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(experiences);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: "Server error" });
   }
 };
-
 
 // @desc    Delete an experience by ID (only if owned by user)
 // @route   DELETE /api/experiences/:id
@@ -105,19 +116,20 @@ export const deleteExperience = async (req, res) => {
     const experience = await Experience.findById(req.params.id);
 
     if (!experience) {
-      return res.status(404).json({ msg: 'Experience not found' });
+      return res.status(404).json({ msg: "Experience not found" });
     }
 
     // Check if the logged-in user is the owner
     if (experience.userId.toString() !== req.userId) {
-      return res.status(403).json({ msg: 'Not authorized to delete this experience' });
+      return res
+        .status(403)
+        .json({ msg: "Not authorized to delete this experience" });
     }
 
     await experience.deleteOne();
-    res.status(200).json({ msg: 'Experience deleted successfully' });
+    res.status(200).json({ msg: "Experience deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Failed to delete experience' });
+    res.status(500).json({ msg: "Failed to delete experience" });
   }
 };
-

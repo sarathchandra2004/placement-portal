@@ -2,10 +2,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { FiUser, FiLogOut, FiPlus, FiHome, FiBookOpen, FiMessageSquare } from 'react-icons/fi'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -90,18 +92,27 @@ const Navbar = () => {
     color: '#fff',
   }
 
+  // Fixed dropdown styles with better positioning
   const dropdown = {
     position: 'absolute',
     right: 0,
-    marginTop: '12px',
+    top: '100%', // Position directly below the container
+    marginTop: '2px', // Small gap to prevent flicker
     width: '180px',
     background: '#fff',
     borderRadius: '8px',
     boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
     overflow: 'hidden',
-    display: 'none',
+    display: isDropdownOpen ? 'flex' : 'none',
     flexDirection: 'column',
     zIndex: 999,
+  }
+
+  // Container that includes both profile circle and dropdown for better hover area
+  const profileContainer = {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
   }
 
   return (
@@ -155,18 +166,14 @@ const Navbar = () => {
             </Link>
 
             <div
-              style={{ position: 'relative' }}
-              onMouseEnter={e => {
-                e.currentTarget.querySelector('.dropdown').style.display = 'flex'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.querySelector('.dropdown').style.display = 'none'
-              }}
+              style={profileContainer}
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
             >
               <div style={profileCircle}>
                 {user?.name?.charAt(0)?.toUpperCase() || 'U'}
               </div>
-              <div className="dropdown" style={dropdown}>
+              <div style={dropdown}>
                 <Link
                   to="/profile"
                   style={{
@@ -174,6 +181,8 @@ const Navbar = () => {
                     textDecoration: 'none',
                     color: '#333',
                     fontWeight: '500',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                   onMouseEnter={e => (e.target.style.background = '#f3f3f3')}
                   onMouseLeave={e => (e.target.style.background = 'transparent')}
@@ -191,6 +200,9 @@ const Navbar = () => {
                     color: '#333',
                     fontWeight: '500',
                     cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
                   }}
                   onMouseEnter={e => (e.target.style.background = '#f3f3f3')}
                   onMouseLeave={e => (e.target.style.background = 'transparent')}

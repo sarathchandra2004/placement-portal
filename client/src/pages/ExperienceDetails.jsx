@@ -34,6 +34,20 @@ const ExperienceDetails = () => {
       day: 'numeric',
     })
 
+  // Function to get user profile link
+  const getUserProfileLink = (userId, userName) => {
+    // Option 1: If you have userId available
+    if (userId) {
+      return `/profile/${userId}`
+    }
+    // Option 2: If you only have userName and want to use that as identifier
+    if (userName) {
+      return `/profile/user/${encodeURIComponent(userName)}`
+    }
+    // Fallback: return null if no identifier available
+    return null
+  }
+
   if (loading) {
     return (
       <div className="details-loading">
@@ -54,6 +68,8 @@ const ExperienceDetails = () => {
     )
   }
 
+  const profileLink = getUserProfileLink(experience.userId || experience.studentId, experience.studentName)
+
   return (
     <div className="experience-details">
       <header className="details-header">
@@ -63,7 +79,34 @@ const ExperienceDetails = () => {
         <h1>
           {experience.company || 'Company'} - {experience.role || 'Role'}
         </h1>
-        <p className="shared-by">Shared by {experience.studentName || 'Anonymous'}</p>
+        <p className="shared-by">
+          Shared by{' '}
+          {profileLink ? (
+            <Link 
+              to={profileLink} 
+              className="user-profile-link"
+              style={{
+                color: '#4e54c8',
+                textDecoration: 'none',
+                fontWeight: '600',
+                borderBottom: '1px solid transparent',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.borderBottom = '1px solid #4e54c8'
+                e.target.style.color = '#3d43a8'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderBottom = '1px solid transparent'
+                e.target.style.color = '#4e54c8'
+              }}
+            >
+              {experience.studentName || 'Anonymous'}
+            </Link>
+          ) : (
+            <span>{experience.studentName || 'Anonymous'}</span>
+          )}
+        </p>
       </header>
 
       <main className="details-card">
@@ -71,7 +114,34 @@ const ExperienceDetails = () => {
           <div>
             <h2>{experience.company}</h2>
             <p className="role">{experience.role}</p>
-            <p className="author">by {experience.studentName}</p>
+            <p className="author">
+              by{' '}
+              {profileLink ? (
+                <Link 
+                  to={profileLink} 
+                  className="user-profile-link"
+                  style={{
+                    color: '#4e54c8',
+                    textDecoration: 'none',
+                    fontWeight: '600',
+                    borderBottom: '1px solid transparent',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderBottom = '1px solid #4e54c8'
+                    e.target.style.color = '#3d43a8'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.borderBottom = '1px solid transparent'
+                    e.target.style.color = '#4e54c8'
+                  }}
+                >
+                  {experience.studentName}
+                </Link>
+              ) : (
+                <span>{experience.studentName}</span>
+              )}
+            </p>
           </div>
           <div className="package-block">
             <span className="package">
@@ -84,11 +154,37 @@ const ExperienceDetails = () => {
               <span className="selected-badge danger">Not Selected</span>
             )}
           </div>
-
         </section>
 
         <section className="info-grid">
-          <div><strong>Name:</strong> {experience.studentName}</div>
+          <div><strong>Name:</strong> 
+            {profileLink ? (
+              <Link 
+                to={profileLink} 
+                className="user-profile-link"
+                style={{
+                  color: '#4e54c8',
+                  textDecoration: 'none',
+                  fontWeight: '600',
+                  marginLeft: '8px',
+                  borderBottom: '1px solid transparent',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.borderBottom = '1px solid #4e54c8'
+                  e.target.style.color = '#3d43a8'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.borderBottom = '1px solid transparent'
+                  e.target.style.color = '#4e54c8'
+                }}
+              >
+                {experience.studentName}
+              </Link>
+            ) : (
+              <span style={{ marginLeft: '8px' }}>{experience.studentName}</span>
+            )}
+          </div>
           <div><strong>Company:</strong> {experience.company}</div>
           <div><strong>Role:</strong> {experience.role}</div>
           <div><strong>LPA:</strong> {experience.package ? `₹ ${experience.package} LPA` : 'N/A'}</div>

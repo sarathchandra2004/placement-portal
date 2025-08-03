@@ -5,6 +5,8 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import experienceRoutes from './routes/experienceRoutes.js';
 import discussionRoutes from './routes/discussionRoutes.js';
+// In your main server file (server.js or app.js)
+import userRoutes from './routes/userRoutes.js';
 
 
 
@@ -16,6 +18,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 
+app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/experiences', experienceRoutes);
 app.use('/api/discussions', discussionRoutes);

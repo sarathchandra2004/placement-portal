@@ -40,25 +40,35 @@ const Experiences = () => {
     try {
       setLoading(true)
       const params = new URLSearchParams()
+
       Object.entries(activeFilters).forEach(([key, value]) => {
-        if (value) params.append(key, value)
+        if (value !== '') {
+          if (key === 'gotSelected') {
+            params.append(key, value === 'true' ? 'true' : 'false')
+          } else {
+            params.append(key, value)
+          }
+        }
       })
+      console.log('Filters being sent:', activeFilters)
+      console.log('Query params:', params.toString())
+
+
       const response = await api.get(`/experiences?${params.toString()}`)
       setExperiences(response.data)
+
       if (resultsRef.current) {
         resultsRef.current.scrollIntoView({ behavior: 'smooth' })
       }
-      if (value !== '') {
-        params.append(key, value === 'true' ? true : value === 'false' ? false : value)
-      }
-
     } catch (error) {
       console.error('Error fetching experiences:', error)
-      toast.error('Failed to load experiences')
+      toast.error(`Failed to load experiences: ${error.response?.data?.message || error.message}`)
     } finally {
       setLoading(false)
     }
   }
+
+
 
   const handlePendingFilterChange = (e) => {
     const { name, value } = e.target
@@ -72,10 +82,11 @@ const Experiences = () => {
 
   const clearFilters = (e) => {
     e.preventDefault()
-    const cleared = { company: '', department: '', type: '', minLPA: '', maxLPA: '' }
+    const cleared = { company: '', department: '', type: '', minLPA: '', maxLPA: '', gotSelected: '' }
     setPendingFilters(cleared)
     fetchExperiences(cleared)
   }
+
 
   if (loading) {
     return (
