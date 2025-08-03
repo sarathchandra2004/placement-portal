@@ -88,6 +88,7 @@ const AddExperience = () => {
         difficultyRating: parseInt(formData.difficultyRating)
       }
 
+      // Remove /api from the path since VITE_API_BASE_URL already includes it
       await api.post('/experiences', cleanedData)
       toast.success('Experience shared successfully!')
       navigate('/experiences')
@@ -180,6 +181,7 @@ const AddExperience = () => {
                 <option value="5">5 - Very Difficult: "Yeh humse na ho payega", bhagwaan bharose </option>
               </select>
             </div>
+            
             {['questions', 'questionTags', 'resources'].map((field) => (
               <div key={field} className="form-group">
                 <label>{field === 'questions' ? 'Interview Questions' : field === 'questionTags' ? 'Question Tags (Ex: Trees, System Design, OS.. etc)' : 'Preparation Resources'}</label>
@@ -214,25 +216,22 @@ const AddExperience = () => {
               <input type="text" name="preparationDuration" value={formData.preparationDuration} onChange={handleChange} />
             </div>
 
-            {/* Repeated input arrays */}
+            <div className="highlight-box">
+              <label className="highlight-label">
+                <input
+                  type="checkbox"
+                  name="gotSelected"
+                  checked={formData.gotSelected}
+                  onChange={handleChange}
+                />
+                <span className="highlight-text">I got selected in this company</span>
+              </label>
+            </div>
 
             <div className="form-actions">
               <button type="button" onClick={() => navigate('/experiences')} className="btn-secondary">Cancel</button>
               <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Sharing...' : 'Share Experience'}</button>
-
             </div>
-            <div className="highlight-box">
-  <label className="highlight-label">
-    <input
-      type="checkbox"
-      name="gotSelected"
-      checked={formData.gotSelected}
-      onChange={handleChange}
-    />
-    <span className="highlight-text">I got selected in this company</span>
-  </label>
-</div>
-
 
           </form>
         </div>

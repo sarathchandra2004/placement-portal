@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FiEdit, FiCalendar, FiBookOpen } from 'react-icons/fi';
+import { api } from '../utils/api'; // Your existing API import
 import './MyExperiences.css';
-
-// Add your deployed backend URL here
-const API_BASE_URL = process.env.VITE_API_BASE_URL || 'https://placement-portal-server.onrender.com/api' ;
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -19,29 +16,24 @@ const formatDate = (dateStr) => {
 const MyExperiences = () => {
   const [userExperiences, setUserExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMyExperiences = async () => {
       try {
-        const token = localStorage.getItem('token');
-        // Use full URL instead of relative path
-        const res = await axios.get(`${API_BASE_URL}/api/experiences/mine`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        setLoading(true);
+        setError(null);
+        
+        // Remove /api from the path since VITE_API_BASE_URL already includes it
+        const res = await api.get('/experiences/mine');
         setUserExperiences(res.data);
       } catch (err) {
         console.error('Error fetching user experiences:', err);
-        // Add more detailed error logging
-        if (err.response) {
-          console.error('Response error:', err.response.data);
-          console.error('Status:', err.response.status);
-        } else if (err.request) {
-          console.error('Request error:', err.request);
-        } else {
-          console.error('Error message:', err.message);
+        setError('Failed to load experiences. Please try again.');
+        
+        if (err.response?.status === 401) {
+          navigate('/login');
         }
       } finally {
         setLoading(false);
@@ -49,7 +41,60 @@ const MyExperiences = () => {
     };
 
     fetchMyExperiences();
-  }, []);
+  }, [navigate]);
+
+  const handleDelete = async (experienceId, companyName) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete your experience at ${companyName}?`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      // Remove /api from the path
+      await api.delete(`/experiences/${experienceId}`);
+      setUserExperiences((prev) =>
+        prev.filter((exp) => exp._id !== experienceId)
+      );
+    } catch (err) {
+      console.error('Error deleting experience:', err);
+      alert('Failed to delete experience. Please try again.');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="card fade-in">
+        <div className="p-6">
+          <div className="text-center py-10">
+            <div className="spinner mx-auto mb-4"></div>
+            <p className="text-gray-500">Loading your experiences...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="card fade-in">
+        <div className="p-6">
+          <div className="text-center py-10">
+            <div className="text-red-400 text-4xl mb-4">⚠️</div>
+            <h4 className="text-lg font-semibold text-gray-900 mb-2">
+              Something went wrong
+            </h4>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn btn-primary"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="card fade-in">
@@ -62,12 +107,7 @@ const MyExperiences = () => {
           </a>
         </div>
 
-        {loading ? (
-          <div className="text-center py-10">
-            <div className="spinner mx-auto mb-4"></div>
-            <p className="text-gray-500">Loading your experiences...</p>
-          </div>
-        ) : userExperiences.length === 0 ? (
+        {userExperiences.length === 0 ? (
           <div className="text-center py-8">
             <div className="text-gray-400 text-4xl mb-4">📝</div>
             <h4 className="text-lg font-semibold text-gray-900 mb-2">
@@ -99,29 +139,7 @@ const MyExperiences = () => {
                     </button>
                     <button
                       className="delete-button"
-                      onClick={async () => {
-                        const confirmDelete = window.confirm(
-                          `Are you sure you want to delete your experience at ${experience.company}?`
-                        );
-                        if (!confirmDelete) return;
-
-                        try {
-                          const token = localStorage.getItem('token');
-                          // Use full URL for delete request too
-                          await axios.delete(`${API_BASE_URL}/api/experiences/${experience._id}`, {
-                            headers: {
-                              Authorization: `Bearer ${token}`,
-                            },
-                          });
-
-                          setUserExperiences((prev) =>
-                            prev.filter((exp) => exp._id !== experience._id)
-                          );
-                        } catch (err) {
-                          console.error('Error deleting experience:', err);
-                          alert('Failed to delete experience. Please try again.');
-                        }
-                      }}
+                      onClick={() => handleDelete(experience._id, experience.company)}
                     >
                       Delete
                     </button>
@@ -157,7 +175,7 @@ const MyExperiences = () => {
                         {tag}
                       </span>
                     ))}
-                    {experience.questionTags.length > 3 && (
+                    {experience.questionTags.length > 2 && (
                       <span className="badge">
                         +{experience.questionTags.length - 3} more
                       </span>
