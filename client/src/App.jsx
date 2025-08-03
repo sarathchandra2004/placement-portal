@@ -1,51 +1,37 @@
 import { Routes, Route } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Experiences from './pages/Experiences'
-import AddExperience from './pages/AddExperience'
-import ExperienceDetails from './pages/ExperienceDetails'
-import Discussions from './pages/Discussions'
-import Profile from './pages/Profile'
-import ProtectedRoute from './components/ProtectedRoute'
-import EditExperience from './pages/EditExperience'
-import UserProfile from './pages/UserProfile'
+// import Home from './pages/Home'
+// import Login from './pages/Login'
+// import Register from './pages/Register'
+// import Experiences from './pages/Experiences'
+// import AddExperience from './pages/AddExperience'
+// import ExperienceDetails from './pages/ExperienceDetails'
+// import Discussions from './pages/Discussions'
+// import Profile from './pages/Profile'
+// import ProtectedRoute from './components/ProtectedRoute'
+// import EditExperience from './pages/EditExperience'
+// import UserProfile from './pages/UserProfile'
 import './styles/App.css'
 
 function App() {
+  console.log('App component is rendering') // Debug log
+  
   const { user } = useAuth()
+  console.log('User from context:', user) // Debug log
 
   return (
     <div className="App">
       <Navbar />
       <main className="main-content">
+        <div style={{padding: '20px', background: 'lightblue'}}>
+          <h2>MAIN CONTENT TEST - This should be visible</h2>
+          <p>Current URL: {window.location.pathname}</p>
+        </div>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/experiences" element={<Experiences />} />
-          <Route path="/experiences/:id" element={<ExperienceDetails />} />
-          <Route path="/discussions" element={<Discussions />} />
-          <Route
-            path="/add-experience"
-            element={
-              <ProtectedRoute>
-                <AddExperience />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/profile/:id" element={<UserProfile />} />
-          <Route path="/edit-experience/:id" element={<EditExperience />} />
+          <Route path="/" element={<div style={{padding: '20px', background: 'lightgreen'}}>HOME ROUTE TEST</div>} />
+          <Route path="/login" element={<div style={{padding: '20px', background: 'lightcoral'}}>LOGIN ROUTE TEST</div>} />
+          <Route path="*" element={<div style={{padding: '20px', background: 'lightyellow'}}>404 - Route not found</div>} />
         </Routes>
       </main>
       <div
