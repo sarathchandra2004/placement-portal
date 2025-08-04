@@ -57,3 +57,9 @@ Backend: Node.js, Express.js
 Database: MongoDB
 
 Authentication: JSON Web Tokens (JWT)
+
+<img width="1837" height="661" alt="image" src="https://github.com/user-attachments/assets/9ae6df1d-7098-4530-bb50-c44b98df3962" />
+<img width="1848" height="773" alt="image" src="https://github.com/user-attachments/assets/0f4258d5-0e13-48f8-b68a-bfb32939c687" />
+<img width="1581" height="723" alt="image" src="https://github.com/user-attachments/assets/885797a6-ddc4-4bcc-82a7-3446e6dd64e1" />
+
+
