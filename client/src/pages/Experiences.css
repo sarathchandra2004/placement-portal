@@ -36,10 +36,12 @@
 .experiences-header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
+  font-weight: 700;
 }
 .experiences-header p {
   font-size: 1.2rem;
   opacity: 0.9;
+  font-weight: 300;
 }
 
 /* Container */
@@ -47,6 +49,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+  margin-top: -30px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Filters */
@@ -68,6 +73,7 @@
 .filters-header h3 {
   font-size: 1.3rem;
   color: #333;
+  margin: 0;
 }
 .filter-icon {
   color: #3498db;
@@ -78,25 +84,32 @@
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
 }
+.filters-grid > div {
+  display: flex;
+  flex-direction: column;
+}
 .filters-grid label {
   font-weight: 600;
   color: #555;
   font-size: 0.9rem;
+  margin-bottom: 8px;
 }
 .filters-grid input,
 .filters-grid select {
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  margin-top: 8px;
-  font-size: 0.95rem;
+  font-size: 16px;
   transition: border 0.3s;
+  box-sizing: border-box;
+  min-height: 44px;
 }
 .filters-grid input:focus,
 .filters-grid select:focus {
   border: 1px solid #3498db;
   outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 .input-icon {
   position: relative;
@@ -107,9 +120,10 @@
   left: 12px;
   transform: translateY(-50%);
   color: #aaa;
+  pointer-events: none;
 }
 .input-icon input {
-  padding-left: 36px;
+  padding-left: 40px;
 }
 
 .filters-actions {
@@ -119,37 +133,44 @@
   margin-top: 25px;
 }
 .btn-clear {
-  padding: 10px 18px;
+  padding: 12px 20px;
   background: #e0e0e0;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
   color: #555;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  min-height: 44px;
+  font-size: 16px;
 }
 .btn-clear:hover {
   background: #d5d5d5;
 }
 .btn-apply {
-  padding: 10px 18px;
+  padding: 12px 20px;
   background: #4e54c8;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
   color: white;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  min-height: 44px;
+  font-size: 16px;
 }
 .btn-apply:hover {
   background: #3f45a8;
 }
 
 /* Results Header */
+.results-header {
+  margin-bottom: 24px;
+}
 .results-header h2 {
   font-size: 1.6rem;
   color: #333;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 /* Cards */
@@ -166,30 +187,45 @@
   text-decoration: none;
   color: inherit;
   transition: transform 0.3s, box-shadow 0.3s;
+  display: block;
 }
 .experience-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  gap: 12px;
+}
+.card-header > div:first-child {
+  flex: 1;
+  min-width: 0;
 }
 .card-header h3 {
   font-size: 1.2rem;
   color: #222;
-  margin-bottom: 5px;
+  margin: 0 0 6px 0;
+  word-wrap: break-word;
 }
 .card-header p {
   color: #666;
   font-size: 0.95rem;
+  margin: 0 0 4px 0;
 }
 .card-header span {
   display: block;
   font-size: 0.85rem;
   color: #888;
+  margin: 0;
+}
+.card-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  flex-shrink: 0;
 }
 .package-badge {
   background: #e0ebff;
@@ -197,7 +233,23 @@
   padding: 6px 12px;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.selected-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.selected-badge.success {
+  background: #d4edda;
+  color: #155724;
+}
+.selected-badge.danger {
+  background: #f8d7da;
+  color: #721c24;
 }
 
 /* No Results */
@@ -215,8 +267,248 @@
 .no-results h3 {
   font-size: 1.5rem;
   color: #222;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
 }
 .no-results p {
   color: #666;
+  margin: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .experiences-header {
+    padding: 40px 16px;
+  }
+  
+  .experiences-header h1 {
+    font-size: 2rem;
+  }
+  
+  .experiences-header p {
+    font-size: 1rem;
+  }
+  
+  .experiences-container {
+    padding: 0 16px;
+    margin-top: -20px;
+  }
+  
+  .filters-card {
+    padding: 20px 16px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .filters-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .filters-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  
+  .btn-clear,
+  .btn-apply {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .results-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .experience-card {
+    padding: 16px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .card-tags {
+    flex-direction: row;
+    align-items: center;
+    align-self: stretch;
+    justify-content: space-between;
+  }
+  
+  .package-badge,
+  .selected-badge {
+    font-size: 0.8rem;
+  }
+  
+  .no-results {
+    padding: 40px 16px;
+  }
+  
+  .no-results .emoji {
+    font-size: 3rem;
+  }
+  
+  .no-results h3 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .experiences-header {
+    padding: 30px 12px;
+  }
+  
+  .experiences-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .experiences-header p {
+    font-size: 0.9rem;
+  }
+  
+  .experiences-container {
+    padding: 0 12px;
+  }
+  
+  .filters-card {
+    padding: 16px 12px;
+  }
+  
+  .filters-header {
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  
+  .filters-header h3 {
+    font-size: 1rem;
+  }
+  
+  .filters-grid {
+    gap: 14px;
+  }
+  
+  .filters-grid label {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+  
+  .filters-grid input,
+  .filters-grid select {
+    padding: 12px;
+    font-size: 16px;
+  }
+  
+  .input-icon input {
+    padding-left: 38px;
+  }
+  
+  .experience-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  
+  .card-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .card-header p {
+    font-size: 0.9rem;
+  }
+  
+  .card-header span {
+    font-size: 0.8rem;
+  }
+  
+  .card-tags {
+    gap: 6px;
+  }
+  
+  .package-badge,
+  .selected-badge {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+  
+  .no-results {
+    padding: 30px 12px;
+  }
+  
+  .no-results .emoji {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+  
+  .no-results h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+}
+
+/* Touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .experience-card:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  .experience-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+  }
+  
+  .btn-clear:hover,
+  .btn-apply:hover {
+    background: inherit;
+  }
+  
+  .btn-clear:active {
+    background: #d5d5d5;
+  }
+  
+  .btn-apply:active {
+    background: #3f45a8;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .filters-card,
+  .experience-card,
+  .no-results {
+    border: 2px solid #000;
+  }
+  
+  .package-badge {
+    border: 1px solid #3056d3;
+  }
+  
+  .selected-badge.success {
+    border: 1px solid #155724;
+  }
+  
+  .selected-badge.danger {
+    border: 1px solid #721c24;
+  }
 }

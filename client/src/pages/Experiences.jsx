@@ -118,13 +118,13 @@ const Experiences = () => {
             <div>
               <label>Company</label>
               <div className="input-icon">
-                <FiSearch />
+                
                 <input
                   type="text"
                   name="company"
                   value={pendingFilters.company}
                   onChange={handlePendingFilterChange}
-                  placeholder="Search company"
+                  placeholder="Type company name"
                 />
               </div>
             </div>

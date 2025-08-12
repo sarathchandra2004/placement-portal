@@ -113,78 +113,172 @@ const AddExperience = () => {
         <div className="form-wrapper">
           <form onSubmit={handleSubmit} className="form-card">
             <h2 className="form-title">Experience Details</h2>
+            
+            <div className="required-note">
+              <span className="required-asterisk">*</span> indicates required fields
+            </div>
 
             <div className="form-grid">
               <div className="form-group">
-                <label>Your Name</label>
-                <input type="text" name="studentName" value={formData.studentName} onChange={handleChange} required />
+                <label className="required-label">
+                  Your Name <span className="required-asterisk">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  name="studentName" 
+                  value={formData.studentName} 
+                  onChange={handleChange} 
+                  required 
+                  className="required-field"
+                />
               </div>
 
               <div className="form-group">
-                <label>Company</label>
-                <input type="text" name="company" value={formData.company} onChange={handleChange} required />
+                <label className="required-label">
+                  Company <span className="required-asterisk">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  name="company" 
+                  value={formData.company} 
+                  onChange={handleChange} 
+                  required 
+                  className="required-field"
+                />
               </div>
 
               <div className="form-group">
-                <label>Role/Position</label>
-                <input type="text" name="role" value={formData.role} onChange={handleChange} required />
+                <label className="required-label">
+                  Role/Position <span className="required-asterisk">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  name="role" 
+                  value={formData.role} 
+                  onChange={handleChange} 
+                  required 
+                  className="required-field"
+                />
               </div>
 
               <div className="form-group">
-                <label>Package (LPA)</label>
-                <input type="number" name="package" value={formData.package} onChange={handleChange} step="0.1" required />
+                <label className="required-label">
+                  Package (LPA) <span className="required-asterisk">*</span>
+                </label>
+                <input 
+                  type="number" 
+                  name="package" 
+                  value={formData.package} 
+                  onChange={handleChange} 
+                  step="0.1" 
+                  required 
+                  className="required-field"
+                />
               </div>
 
               <div className="form-group">
-                <label>Type</label>
-                <select name="type" value={formData.type} onChange={handleChange} required>
+                <label className="required-label">
+                  Type <span className="required-asterisk">*</span>
+                </label>
+                <select 
+                  name="type" 
+                  value={formData.type} 
+                  onChange={handleChange} 
+                  required
+                  className="required-field"
+                >
                   <option value="">Select type</option>
                   {types.map(type => <option key={type} value={type}>{type}</option>)}
                 </select>
               </div>
 
               <div className="form-group">
-                <label>Department</label>
-                <select name="department" value={formData.department} onChange={handleChange} required>
+                <label className="optional-label">
+                  Department <span className="optional-text">(optional)</span>
+                </label>
+                <select name="department" value={formData.department} onChange={handleChange}>
                   <option value="">Select department</option>
                   {departments.map(dept => <option key={dept} value={dept}>{dept}</option>)}
                 </select>
               </div>
 
               <div className="form-group">
-                <label>CGPA</label>
-                <input type="number" name="cgpa" value={formData.cgpa} onChange={handleChange} step="0.01" min="0" max="10" />
+                <label className="optional-label">
+                  CGPA <span className="optional-text">(optional)</span>
+                </label>
+                <input 
+                  type="number" 
+                  name="cgpa" 
+                  value={formData.cgpa} 
+                  onChange={handleChange} 
+                  step="0.01" 
+                  min="0" 
+                  max="10" 
+                  placeholder="e.g., 8.5"
+                />
               </div>
 
               <div className="form-group">
-                <label>Number of Rounds</label>
-                <input type="number" name="rounds" value={formData.rounds} onChange={handleChange} min="1" required />
+                <label className="optional-label">
+                  Number of Rounds <span className="optional-text">(optional)</span>
+                </label>
+                <input 
+                  type="number" 
+                  name="rounds" 
+                  value={formData.rounds} 
+                  onChange={handleChange} 
+                  min="1" 
+                  placeholder="e.g., 3"
+                />
               </div>
             </div>
 
             <div className="checkbox-group">
-              <label><input type="checkbox" name="cgpaMatters" checked={formData.cgpaMatters} onChange={handleChange} /> CGPA mattered in selection</label>
-              <label><input type="checkbox" name="wouldRecommend" checked={formData.wouldRecommend} onChange={handleChange} /> Would recommend this company</label>
+              <label className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  name="cgpaMatters" 
+                  checked={formData.cgpaMatters} 
+                  onChange={handleChange} 
+                /> 
+                <span>CGPA mattered in selection</span>
+              </label>
+              <label className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  name="wouldRecommend" 
+                  checked={formData.wouldRecommend} 
+                  onChange={handleChange} 
+                /> 
+                <span>Would recommend this company</span>
+              </label>
             </div>
 
             <div className="form-group">
-              <label>Interview Difficulty for preparation (1-5)</label>
+              <label className="optional-label">
+                Interview Difficulty for preparation (1-5) <span className="optional-text">(optional)</span>
+              </label>
               <select
                 name="difficultyRating"
                 value={formData.difficultyRating}
                 onChange={handleChange}
               >
-                <option value="1">1 - Very Easy: Arre bas naam likha aur ho gaya </option>
+                <option value="1">1 - Very Easy: Arre bas naam likha aur ho gaya</option>
                 <option value="2">2 - Easy: Thoda padha, zyada phone chalaya</option>
                 <option value="3">3 - Moderate: Engineering semester exam vibes (One night wonders)</option>
                 <option value="4">4 - Difficult: RCB ka IPL jeetna jitna mushkil (Luck is important)</option>
-                <option value="5">5 - Very Difficult: "Yeh humse na ho payega", bhagwaan bharose </option>
+                <option value="5">5 - Very Difficult: "Yeh humse na ho payega", bhagwaan bharose</option>
               </select>
             </div>
             
             {['questions', 'questionTags', 'resources'].map((field) => (
               <div key={field} className="form-group">
-                <label>{field === 'questions' ? 'Interview Questions' : field === 'questionTags' ? 'Question Tags (Ex: Trees, System Design, OS.. etc)' : 'Preparation Resources'}</label>
+                <label className="optional-label">
+                  {field === 'questions' ? 'Interview Questions' : 
+                   field === 'questionTags' ? 'Question Tags (Ex: Trees, System Design, OS.. etc)' : 
+                   'Preparation Resources'} 
+                  <span className="optional-text">(optional)</span>
+                </label>
                 {formData[field].map((item, index) => (
                   <div key={index} className="dynamic-input">
                     <input
@@ -207,13 +301,29 @@ const AddExperience = () => {
             ))}
 
             <div className="form-group">
-              <label>Interview Guidance/ Additional Tips</label>
-              <textarea name="timeline" value={formData.timeline} onChange={handleChange} rows="3" />
+              <label className="optional-label">
+                Interview Guidance/ Additional Tips <span className="optional-text">(optional)</span>
+              </label>
+              <textarea 
+                name="timeline" 
+                value={formData.timeline} 
+                onChange={handleChange} 
+                rows="3" 
+                placeholder="Share any additional tips or guidance for the interview process..."
+              />
             </div>
 
             <div className="form-group">
-              <label>Preparation Strategy</label>
-              <input type="text" name="preparationDuration" value={formData.preparationDuration} onChange={handleChange} />
+              <label className="optional-label">
+                Preparation Strategy <span className="optional-text">(optional)</span>
+              </label>
+              <input 
+                type="text" 
+                name="preparationDuration" 
+                value={formData.preparationDuration} 
+                onChange={handleChange} 
+                placeholder="e.g., 2 months of consistent practice, focused on DSA..."
+              />
             </div>
 
             <div className="highlight-box">
@@ -230,7 +340,9 @@ const AddExperience = () => {
 
             <div className="form-actions">
               <button type="button" onClick={() => navigate('/experiences')} className="btn-secondary">Cancel</button>
-              <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Sharing...' : 'Share Experience'}</button>
+              <button type="submit" disabled={loading} className="btn-primary">
+                {loading ? 'Sharing...' : 'Share Experience'}
+              </button>
             </div>
 
           </form>

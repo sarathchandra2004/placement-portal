@@ -36,16 +36,25 @@ const ExperienceDetails = () => {
 
   // Function to get user profile link
   const getUserProfileLink = (userId, userName) => {
-    // Option 1: If you have userId available
     if (userId) {
       return `/profile/${userId}`
     }
-    // Option 2: If you only have userName and want to use that as identifier
     if (userName) {
       return `/profile/user/${encodeURIComponent(userName)}`
     }
-    // Fallback: return null if no identifier available
     return null
+  }
+
+  // Function to get difficulty label
+  const getDifficultyLabel = (rating) => {
+    const labels = {
+      1: "Very Easy: Arre bas naam likha aur ho gaya",
+      2: "Easy: Thoda padha, zyada phone chalaya", 
+      3: "Moderate: Engineering semester exam vibes (One night wonders)",
+      4: "Difficult: RCB ka IPL jeetna jitna mushkil (Luck is important)",
+      5: "Very Difficult: \"Yeh humse na ho payega\", bhagwaan bharose"
+    }
+    return labels[rating] || `${rating}/5`
   }
 
   if (loading) {
@@ -187,13 +196,56 @@ const ExperienceDetails = () => {
           </div>
           <div><strong>Company:</strong> {experience.company}</div>
           <div><strong>Role:</strong> {experience.role}</div>
-          <div><strong>LPA:</strong> {experience.package ? `₹ ${experience.package} LPA` : 'N/A'}</div>
+          <div><strong>Package:</strong> {experience.package ? `₹ ${experience.package} LPA` : 'N/A'}</div>
+          <div><strong>Type:</strong> {experience.type}</div>
           {experience.department && <div><strong>Department:</strong> {experience.department}</div>}
+          {experience.cgpa && <div><strong>CGPA:</strong> {experience.cgpa}</div>}
+          {experience.rounds && <div><strong>Interview Rounds:</strong> {experience.rounds}</div>}
         </section>
 
+        {/* Additional Information Section */}
+        <section className="details-section">
+          <h3>Selection Details</h3>
+          <div className="selection-details">
+            {experience.cgpaMatters !== undefined && (
+              <div className="detail-item">
+                <strong>CGPA Importance:</strong> 
+                <span className={experience.cgpaMatters ? 'text-success' : 'text-muted'}>
+                  {experience.cgpaMatters ? 'CGPA mattered in selection' : 'CGPA did not matter'}
+                </span>
+              </div>
+            )}
+            {experience.wouldRecommend !== undefined && (
+              <div className="detail-item">
+                <strong>Recommendation:</strong> 
+                <span className={experience.wouldRecommend ? 'text-success' : 'text-danger'}>
+                  {experience.wouldRecommend ? 'Would recommend this company' : 'Would not recommend this company'}
+                </span>
+              </div>
+            )}
+            {experience.difficultyRating && (
+              <div className="detail-item">
+                <strong>Difficulty Rating:</strong> 
+                <span className="difficulty-rating">
+                  {getDifficultyLabel(experience.difficultyRating)}
+                </span>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Preparation Strategy */}
+        {experience.preparationDuration && (
+          <section className="details-section">
+            <h3>Preparation Strategy</h3>
+            <p>{experience.preparationDuration}</p>
+          </section>
+        )}
+
+        {/* Interview Guidance */}
         {experience.timeline && (
           <section className="details-section">
-            <h3>Additional Information</h3>
+            <h3>Interview Guidance / Additional Tips</h3>
             <p>{experience.timeline}</p>
           </section>
         )}
@@ -243,4 +295,4 @@ const ExperienceDetails = () => {
   )
 }
 
-export default ExperienceDetails
+export default ExperienceDetails  
